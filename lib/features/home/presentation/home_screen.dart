@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
-import 'package:my_notes/features/verify_email/presentation/verify_email_screen.dart';
+import 'package:my_notes/features/home/data/enum/menu_action.dart';
+import 'package:my_notes/features/home/presentation/widgets/show_logout_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -149,10 +150,39 @@ class __HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text("Welcome ${_authRepository.user?.email} Home Page"),
+          title: const Center(
+            child: Text("Welcome to Home Page"),
           ),
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
+          actions: [
+            PopupMenuButton<MenuAction>(
+                //icon: const Icon(Icons.menu_open_rounded),
+                onSelected: (value) {
+              switch (value) {
+                case MenuAction.logout:
+                  showLogOutDialog(context, _handleLogout);
+                  break;
+                default:
+                  break;
+              }
+            }, itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.myNotes, child: Text("My Notes")),
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.display, child: Text("Display")),
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.resetPassword,
+                    child: Text("Reset password")),
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.verifyEmail, child: Text("Verify Email")),
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.logout, child: Text("Log out")),
+                PopupMenuItem<MenuAction>(
+                    value: MenuAction.delete, child: Text("Delete")),
+              ];
+            })
+          ],
         ),
         body: Column(
           children: [
