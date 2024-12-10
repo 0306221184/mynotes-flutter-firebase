@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "567084210972",
+    "project_id": "mynotes-flutter-tinwana-a130e",
+    "storage_bucket": "mynotes-flutter-tinwana-a130e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567084210972:android:2f4c24a934137a9daa38d9",
+        "android_client_info": {
+          "package_name": "mynotes.flutter.tinwana"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzyrx-o4FWL8zLPRzjX38U8DrJDdN9c2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

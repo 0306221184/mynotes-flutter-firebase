@@ -1,0 +1,179 @@
+1. Container
+A Container is a versatile widget used for layout and styling. It can hold other widgets and allows you to customize dimensions, margins, padding, color, etc.
+
+Key properties:
+
+child: The widget inside the container.
+padding: Adds padding inside the container.
+margin: Adds spacing outside the container.
+decoration: Adds decoration like borders, gradients, etc.
+color: Background color.
+width & height: Specifies the size of the container.
+2. Column
+The Column widget displays its children vertically.
+
+Key properties:
+
+children: List of widgets to display inside the column.
+mainAxisAlignment: Controls the alignment of children along the main axis (vertical).
+crossAxisAlignment: Controls the alignment along the cross axis (horizontal).
+mainAxisSize: Controls how much space the column takes up.
+3. Row
+The Row widget displays its children horizontally.
+
+Key properties:
+
+children: List of widgets to display inside the row.
+mainAxisAlignment: Controls the alignment of children along the main axis (horizontal).
+crossAxisAlignment: Controls the alignment along the cross axis (vertical).
+mainAxisSize: Controls how much space the row takes up.
+4. Scaffold
+A Scaffold provides a basic structure for the layout, including AppBar, body, floating action button, and more.
+
+Key properties:
+
+appBar: A widget to display the AppBar at the top.
+body: The main content of the screen.
+floatingActionButton: A button displayed at the bottom-right corner.
+drawer: A slide-in menu on the left side.
+bottomNavigationBar: A widget displayed at the bottom.
+5. Text
+The Text widget displays a string of text with specified styles.
+
+Key properties:
+
+data: The text content to display.
+style: Defines the text style (font size, weight, etc.).
+textAlign: Controls the alignment of the text.
+overflow: Controls how overflowing text is handled.
+6. AppBar
+The AppBar widget is a material design app bar typically used for titles, navigation, and actions.
+
+Key properties:
+
+title: The main title displayed in the AppBar.
+leading: A widget to place at the start of the AppBar (e.g., a back button).
+actions: A list of widgets to display on the right side.
+backgroundColor: The background color of the AppBar.
+elevation: The shadow effect under the AppBar.
+7. FloatingActionButton
+A FloatingActionButton is a button that floats above the content, often used for primary actions.
+
+Key properties:
+
+onPressed: The callback when the button is pressed.
+child: The widget inside the button (usually an Icon).
+tooltip: A label that appears when the user hovers over or long presses the button.
+8. Image
+The Image widget displays an image on the screen.
+
+Key properties:
+
+image: The image source, either from an asset, network, or file.
+width & height: Specifies the size of the image.
+fit: Defines how the image should be scaled (cover, contain, fill).
+9. Icon
+The Icon widget displays an icon from the Material Icons library or custom icons.
+
+Key properties:
+
+icon: The icon to display (e.g., Icons.home).
+size: The size of the icon.
+color: The color of the icon.
+10. ListView
+A ListView is used to display a scrollable list of items.
+
+Key properties:
+
+children: List of widgets that make up the list.
+itemCount: The number of items in the list.
+itemBuilder: A callback to build each item.
+scrollDirection: Controls whether the list scrolls vertically or horizontally.
+11. Stack
+A Stack allows you to position widgets on top of each other.
+
+Key properties:
+
+children: The widgets to display in the stack.
+alignment: Controls the alignment of widgets inside the stack.
+fit: Controls how widgets are sized inside the stack (loose or expand).
+12. Form
+The Form widget groups form fields together for validation and submission.
+
+Key properties:
+
+key: A unique identifier for the form.
+child: The child widgets (usually TextFormFields) inside the form.
+onChanged: A callback that gets triggered when the form’s value changes.
+13. TextField
+The TextField widget is used to capture user input as text.
+
+Key properties:
+
+controller: A controller for managing the text input.
+decoration: A decoration to style the text field (e.g., label, hint text).
+keyboardType: Defines the type of keyboard to display (text, number, email).
+onChanged: A callback that gets triggered when the text changes.
+14. Padding
+The Padding widget adds padding around a child widget.
+
+Key properties:
+
+padding: The amount of padding to apply around the child.
+child: The widget that will have padding applied.
+15. Expanded
+The Expanded widget is used to make a widget take up remaining space in a flex container (e.g., Column, Row).
+
+Key properties:
+
+child: The widget that should take up remaining space.
+16. Align
+The Align widget is used to align a child widget within itself.
+
+Key properties:
+
+alignment: Defines the alignment of the child within the parent.
+child: The widget to align.
+17. Hero
+The Hero widget is used to create a hero animation between two screens.
+
+Key properties:
+
+tag: A unique tag that identifies the hero animation.
+child: The widget to animate.
+18. GestureDetector
+The GestureDetector widget detects gestures (taps, drags, etc.) and triggers actions based on user input.
+
+Key properties:
+
+onTap: A callback triggered when the widget is tapped.
+onLongPress: A callback triggered when the widget is long pressed.
+onPanUpdate: A callback triggered when a drag gesture is updated.
+19. Drawer
+The Drawer widget provides a slide-in menu from the left side of the screen.
+
+Key properties:
+
+child: The content inside the drawer (typically a list of items).
+elevation: The shadow effect behind the drawer.
+20. SnackBar
+The SnackBar widget displays a brief message at the bottom of the screen.
+
+Key properties:
+
+content: The content of the Snackbar (typically a Text widget).
+duration: The duration for which the Snackbar will be displayed.
+action: An optional action button to show with the Snackbar.
+21. MaterialPageRoute
+The MaterialPageRoute widget is used to navigate between screens in a material design app.
+
+Key properties:
+
+builder: A callback that returns the widget to be displayed on the new screen.
+22. SingleChildScrollView
+The SingleChildScrollView widget makes a single child scrollable if it overflows the screen.
+
+Key properties:
+
+child: The widget that can be scrolled.
+scrollDirection: The direction of scrolling (vertical or horizontal).

@@ -1,0 +1,198 @@
+lib/
+├── features/
+│   ├── authentication/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   │   └── user_model.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── auth_repository.dart
+│   │   │   └── data_sources/
+│   │   │       └── firebase_auth_data_source.dart
+│   │   ├── domain/
+│   │   │   ├── use_cases/
+│   │   │   │   └── sign_in_use_case.dart
+│   │   │   └── entities/
+│   │   │       └── user.dart
+│   │   ├── presentation/
+│   │   │   ├── screens/
+│   │   │   │   └── sign_in_screen.dart
+│   │   │   ├── widgets/
+│   │   │   │   └── sign_in_form.dart
+│   │   │   └── cubit/
+│   │   │       └── auth_cubit.dart
+│   ├── home/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   │   └── note_model.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── note_repository.dart
+│   │   │   └── data_sources/
+│   │   │       └── firestore_note_data_source.dart
+│   │   ├── domain/
+│   │   │   ├── use_cases/
+│   │   │   │   └── get_notes_use_case.dart
+│   │   │   └── entities/
+│   │   │       └── note.dart
+│   │   ├── presentation/
+│   │   │   ├── screens/
+│   │   │   │   └── home_screen.dart
+│   │   │   ├── widgets/
+│   │   │   │   └── note_item.dart
+│   │   │   └── cubit/
+│   │   │       └── home_cubit.dart
+│   ├── settings/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   │   └── settings_model.dart
+│   │   │   ├── repositories/
+│   │   │   │   └── settings_repository.dart
+│   │   ├── domain/
+│   │   │   ├── use_cases/
+│   │   │   │   └── update_settings_use_case.dart
+│   │   ├── presentation/
+│   │   │   ├── screens/
+│   │   │   │   └── settings_screen.dart
+│   │   │   └── widgets/
+│   │   │       └── settings_item.dart
+│   └── splash/
+│       ├── presentation/
+│       │   ├── screens/
+│       │   │   └── splash_screen.dart
+├── core/
+│   ├── errors/
+│   │   └── exceptions.dart
+│   ├── network/
+│   │   └── network_info.dart
+│   ├── utils/
+│   │   └── validators.dart
+├── shared/
+│   ├── widgets/
+│   │   └── custom_button.dart
+│   ├── themes/
+│   │   └── app_theme.dart
+│   └── config/
+│       └── firebase_config.dart
+└── main.dart
+
+
+Built-In HTML Widgets and Their Flutter Equivalents
+Text Input Field
+
+HTML: <input type="text">
+Flutter: TextField
+Password Input Field
+
+HTML: <input type="password">
+Flutter: TextField with obscureText: true
+Email Input Field
+
+HTML: <input type="email">
+Flutter: TextField with keyboardType: TextInputType.emailAddress
+Numeric Input Field
+
+HTML: <input type="number">
+Flutter: TextField with keyboardType: TextInputType.number
+Phone Number Input Field
+
+HTML: <input type="tel">
+Flutter: TextField with keyboardType: TextInputType.phone
+URL Input Field
+
+HTML: <input type="url">
+Flutter: TextField with keyboardType: TextInputType.url
+Search Input Field
+
+HTML: <input type="search">
+Flutter: TextField
+Multiline Text Area
+
+HTML: <textarea>
+Flutter: TextField with maxLines: null
+Button
+
+HTML: <button>
+Flutter: ElevatedButton, TextButton, OutlinedButton
+Checkbox
+
+HTML: <input type="checkbox">
+Flutter: Checkbox
+Radio Button
+
+HTML: <input type="radio">
+Flutter: Radio
+Dropdown Menu
+
+HTML: <select>
+Flutter: DropdownButton
+Range Slider
+
+HTML: <input type="range">
+Flutter: Slider
+Color Picker
+
+HTML: <input type="color">
+Flutter: Custom widget or package (e.g., flutter_colorpicker)
+File Picker
+
+HTML: <input type="file">
+Flutter: Requires a package like file_picker
+Date Picker
+
+HTML: <input type="date">
+Flutter: showDatePicker function
+Time Picker
+
+HTML: <input type="time">
+Flutter: showTimePicker function
+Progress Bar
+
+HTML: <progress>
+Flutter: LinearProgressIndicator, CircularProgressIndicator
+Collapsible/Expandable Section
+
+HTML: <details> and <summary>
+Flutter: ExpansionTile
+Label for Input
+
+HTML: <label>
+Flutter: Text
+Output Element
+
+HTML: <output>
+Flutter: Text
+Form Field with Validation
+
+HTML: <input required> or <form>
+Flutter: TextFormField with Form and validator
+Image
+
+HTML: <img>
+Flutter: Image
+Canvas for Graphics
+
+HTML: <canvas>
+Flutter: CustomPaint
+Audio
+
+HTML: <audio>
+Flutter: Requires a package like audioplayers
+Video
+
+HTML: <video>
+Flutter: Requires a package like video_player
+Tooltip
+
+HTML: title attribute
+Flutter: Tooltip
+List with Scroll
+
+HTML: <ul> or <ol> with scrollable styling
+Flutter: ListView
+Table
+
+HTML: <table>
+Flutter: Table, DataTable
+Modal/Popup
+
+HTML: <dialog>
+Flutter: AlertDialog or showDialog
