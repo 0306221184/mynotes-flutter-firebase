@@ -4,6 +4,7 @@ import 'package:my_notes/features/authentication/presentation/login_screen.dart'
 import 'package:my_notes/features/authentication/presentation/register_screen.dart';
 import 'package:my_notes/features/home/presentation/home_screen.dart';
 import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
+import 'package:my_notes/features/home/presentation/widgets/note_screen.dart';
 import 'package:my_notes/features/verify_email/presentation/verify_email_screen.dart';
 
 void main() async {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/verify-email': (context) => const VerifyEmail(),
+        '/notes': (context) => const NoteScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

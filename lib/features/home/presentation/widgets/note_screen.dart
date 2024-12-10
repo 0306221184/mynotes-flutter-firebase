@@ -22,7 +22,9 @@ class _NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("main UI"),
+        title: const Center(
+          child: Text("My Notes"),
+        ),
         backgroundColor: const Color.fromARGB(255, 0, 140, 255),
 
         // leading: IconButton(

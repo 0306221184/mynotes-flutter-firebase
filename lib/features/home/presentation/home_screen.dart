@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 import 'package:my_notes/features/home/data/enum/menu_action.dart';
-import 'package:my_notes/features/home/presentation/widgets/show_logout_dialog.dart';
+import 'package:my_notes/features/home/presentation/widgets/dialogs/show_logout_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,10 +31,6 @@ class __HomeScreenState extends State<HomeScreen> {
     if (_authRepository.user?.emailVerified == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, "/verify-email");
-      });
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/notes");
       });
     }
   }
@@ -148,10 +146,11 @@ class __HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String email = _authRepository.user?.email ?? "";
     return Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text("Welcome to Home Page"),
+          title: Center(
+            child: Text("Welcome to ${email.split("@")[0]} Home Page"),
           ),
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
           actions: [
@@ -159,6 +158,9 @@ class __HomeScreenState extends State<HomeScreen> {
                 //icon: const Icon(Icons.menu_open_rounded),
                 onSelected: (value) {
               switch (value) {
+                case MenuAction.myNotes:
+                  _handleMyNotes();
+                  break;
                 case MenuAction.logout:
                   showLogOutDialog(context, _handleLogout);
                   break;
@@ -184,20 +186,33 @@ class __HomeScreenState extends State<HomeScreen> {
             })
           ],
         ),
-        body: Column(
-          children: [
-            const Text("Home Page"),
-            isLoading == true
-                ? const Center(child: CircularProgressIndicator())
-                : Container(),
-            TextButtonWidget(onPressed: _handleMyNotes, data: "My Notes"),
-            TextButtonWidget(onPressed: _handleDisplay, data: "Display"),
-            TextButtonWidget(
-                onPressed: _handleResetPassword, data: "Reset password"),
-            TextButtonWidget(onPressed: _handleVerifyEmail, data: "Verify"),
-            TextButtonWidget(onPressed: _handleLogout, data: "Logout"),
-            TextButtonWidget(onPressed: _handleDelete, data: "Delete"),
-          ],
-        ));
+        body: FutureBuilder(
+            future:
+                Firebase.initializeApp(options: DefaultFirebaseOptions.android),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Column(
+                  children: [
+                    const Text("Home Page"),
+                    isLoading == true
+                        ? const Center(child: CircularProgressIndicator())
+                        : Container(),
+                    TextButtonWidget(
+                        onPressed: _handleMyNotes, data: "My Notes"),
+                    TextButtonWidget(
+                        onPressed: _handleDisplay, data: "Display"),
+                    TextButtonWidget(
+                        onPressed: _handleResetPassword,
+                        data: "Reset password"),
+                    TextButtonWidget(
+                        onPressed: _handleVerifyEmail, data: "Verify"),
+                    TextButtonWidget(onPressed: _handleLogout, data: "Logout"),
+                    TextButtonWidget(onPressed: _handleDelete, data: "Delete"),
+                  ],
+                );
+              } else {
+                return const Text("Loading...");
+              }
+            }));
   }
 }
