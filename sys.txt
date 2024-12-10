@@ -1,0 +1,168 @@
+@Flutter
+{
+    @Widgets
+    {
+        [
+        AppBar(
+            title: @Widget, // title of bar
+            actions:[List<Widget>?], List Widget of the end of the bar
+            leading: Widget?,// Widget before the title
+            backgroundColor:Color?,//Sets the background color of the AppBar
+            elevation: double?,//Controls the shadow below the AppBar.
+            flexibleSpace:Widget?,//A widget that appears behind the title, actions, and leading widgets. Useful for creating custom app bars.
+            bottom: PreferredSizeWidget?  A widget displayed at the bottom of the AppBar. Commonly used for TabBar.
+            shape: ShapeBorder?,//RoundedRectangleBorder,BeveledRectangleBorder,ContinuousRectangleBorder
+            toolbarHeight: double?,//Specifies the height of the AppBar.
+            iconTheme: IconThemeData?,//Controls the color, opacity, and size of icons in the AppBar.
+            titleTextStyle: TextStyle?,//Sets the style of the title text.
+            systemOverlayStyle:SystemUiOverlayStyle?,//Configures the status bar icon brightness and background color.
+            foregroundColor: Color?,//Sets the default color for text and icons in the AppBar.
+            automaticallyImplyLeading: bool,//Determines whether to display the back button automatically
+        ),
+        PopupMenuButton<T>(
+            onSelected: void Function(T value),
+            itemBuilder: PopupMenuEntry<T> Function(BuildContext context),
+            initialValue: T?,
+            icon: Widget,
+            onCanceled: VoidCallback?,
+            elevation: double?,
+            offset: Offset?,
+            tooltip: String?,
+            enableFeedback: bool,
+            child: Widget,
+            shape: ShapeBorder?,
+        ),
+        Text('Hello World'), // Displays a string of text
+        Container( // A rectangular container for adding padding, margins, borders, and backgrounds
+            child: Text('Hello'),
+            padding: EdgeInsets.all(10),
+        ),
+        Row( // Horizontal layout
+            children: [
+                Text('First'),
+                Text('Second'),
+            ],
+        ),
+        Column( // Vertical layout
+            children: [
+                Text('First'),
+                Text('Second'),
+            ],
+        ),
+        Scaffold,
+        Center,
+        Container,
+        TextButton,
+        ProgressIndicator:{
+            LinearProgressIndicator,
+            CircularProgressIndicator,
+        },
+        FloatingActionButton,
+        Image,
+        Icon,
+        ListView,
+        TextField,
+        Padding,
+        Align,
+        Hero,
+        GestureDetector,
+        Drawer,
+        SnackBar,
+        MaterialPageRoute,
+        SingleChildScrollView,
+        TabBar,
+        AlertDialog,
+        ],
+    },
+    @StateManagement
+    {
+        @StatefulWidget
+        {
+            `
+            class MyWidget extends StatefulWidget {
+                @override
+                _MyWidgetState createState() => _MyWidgetState();
+            }
+
+            class _MyWidgetState extends State<MyWidget> {
+                @override
+                Widget build(BuildContext context) {
+                    return Container();
+                }
+            }
+            `
+        },
+        @Provider
+        {
+            `
+            ChangeNotifierProvider(
+                create: (context) => YourNotifier(),
+                child: YourApp(),
+            );
+            `
+        },
+        @BlocPattern
+        {
+            `
+            BlocProvider(
+                create: (context) => YourBloc(),
+                child: YourApp(),
+            );
+            `
+        },
+    },
+    @Navigation
+    {
+        @NamedRoutes
+        {
+            `
+            Navigator.pushNamed(context, '/routeName');
+            `
+        },
+        @AnonymousRoutes
+        {
+            `
+            Navigator.push(context, MaterialPageRoute(builder: (context) => YourPage()));
+            `
+        },
+    },
+    @Styling
+    {
+        @TextStyle
+        {
+            `
+            Text(
+                'Styled Text',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            );
+            `
+        },
+        @Themes
+        {
+            `
+            ThemeData(
+                primaryColor: Colors.blue,
+                accentColor: Colors.amber,
+            );
+            `
+        },
+    },
+    @Networking
+    {
+        http.get(Uri.parse('https://api.example.com')),
+        http.post(Uri.parse('https://api.example.com'), body: {'key': 'value'}),
+    },
+    @Database
+    {
+        sqflite.openDatabase('my_database.db'),
+        FirebaseFirestore.instance.collection('users').get(),
+    },
+    @ErrorHandling
+    {
+        try {
+            // Your code
+        } catch (e) {
+            print(e);
+        }
+    }
+}
