@@ -4,8 +4,9 @@ import 'package:my_notes/features/authentication/presentation/login_screen.dart'
 import 'package:my_notes/features/authentication/presentation/register_screen.dart';
 import 'package:my_notes/features/home/presentation/home_screen.dart';
 import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
-import 'package:my_notes/features/home/presentation/widgets/note_screen.dart';
+import 'package:my_notes/features/notes/presentation/note_screen.dart';
 import 'package:my_notes/features/verify_email/presentation/verify_email_screen.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,10 +20,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: const HomeScreen(),
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/verify-email': (context) => const VerifyEmail(),
-        '/notes': (context) => const NoteScreen(),
+        loginRoute: (context) => const LoginScreen(),
+        registerRoute: (context) => const RegisterScreen(),
+        emailVerifyRoute: (context) => const VerifyEmail(),
+        notesRoute: (context) => const NoteScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

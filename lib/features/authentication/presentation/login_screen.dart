@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 
@@ -41,7 +42,7 @@ class __LoginScreenState extends State<LoginScreen> {
 
   void _handleRegister() {
     Navigator.pushNamedAndRemoveUntil(
-        context, "/register", (route) => route.isCurrent);
+        context, registerRoute, (route) => route.isCurrent);
   }
 
   Future<void> _handleLogin() async {
@@ -49,7 +50,8 @@ class __LoginScreenState extends State<LoginScreen> {
       isLoading = true; // Start loading
     });
     try {
-      User? res = await _authRepository.login(_email.text, _password.text);
+      User? res =
+          await _authRepository.login(_email.text, _password.text, context);
       print(res);
       if (res != null) {
         Navigator.pushNamedAndRemoveUntil(

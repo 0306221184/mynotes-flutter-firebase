@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 
@@ -46,7 +47,8 @@ class __RegisterScreenState extends State<RegisterScreen> {
     final email = _email.text;
     final password = _password.text;
     try {
-      final User? res = await _authRepository.register(email, password);
+      final User? res =
+          await _authRepository.register(email, password, context);
       print(res);
       if (res != null) {
         Navigator.pushNamedAndRemoveUntil(
@@ -63,7 +65,7 @@ class __RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _handleLogin() async {
     Navigator.pushNamedAndRemoveUntil(
-        context, "/login", (route) => route.isCurrent);
+        context, loginRoute, (route) => route.isCurrent);
   }
 
   @override
@@ -76,10 +78,10 @@ class __RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
         ),
         body: FutureBuilder<List<dynamic>>(
-          future: Future.wait([_handleRegister(), _data]),
+          future: null,
           //Firebase.initializeApp(options: DefaultFirebaseOptions.android),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.connectionState == ConnectionState.none) {
               return Column(
                 children: [
                   TextField(

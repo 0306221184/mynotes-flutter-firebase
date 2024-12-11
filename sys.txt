@@ -32,31 +32,85 @@
             child: Widget,
             shape: ShapeBorder?,
         ),
-        Text('Hello World'), // Displays a string of text
-        Container( // A rectangular container for adding padding, margins, borders, and backgrounds
-            child: Text('Hello'),
-            padding: EdgeInsets.all(10),
+        FutureBuilder(
+            future: Future<T>?,//A Future whose result the builder function depends on.Null => ConnectionState.none.
+            builder: AsyncWidgetBuilder<T>(BuildContext context, AsyncSnapshot<T> snapshot),//A required function that builds a widget based on the current state of the AsyncSnapshot
+            initialData: T?,Optional initial data for the AsyncSnapshot.
+            snapshot:[none,waiting,active,done,data,error]
         ),
-        Row( // Horizontal layout
-            children: [
-                Text('First'),
-                Text('Second'),
-            ],
+        Text(
+            data: String,
+            style: TextStyle?,
+            textAlign: TextAlign?,
+            textDirection: TextDirection?,
+            softWrap: bool?,//Whether the text should wrap to the next line if it exceeds its bounds.
+            overflow: TextOverflow?,
+            maxLines: int?,
+            semanticsLabel: String?,
+            locale: Locale?,
+            strutStyle: StrutStyle?,Defines how vertical spacing (leading) should be applied to the text.
+            textScaleFactor: double?,//Controls the scaling of the text relative to the system font size.
+            key: Key?,
+            textWidthBasis: TextWidthBasis?,Determines the width that the text should be constrained to when laying out.
+            selectionColor: Color?,//The background color of the text when selected.
+        ), // Displays a string of text
+        Container(
+            alignment: AlignmentGeometry?,//Aligns the child widget within the container.
+            padding: EdgeInsetsGeometry?,//Adds padding inside the container, around the child.
+            color: Color?,//Sets the background color of the container.
+            decoration: Decoration?,//Adds decoration to the container, such as borders, rounded corners, or gradients.
+            foregroundDecoration: Decoration?,//Adds a decoration in front of the child (like an overlay).
+            width: double?,
+            height: double?,
+            constraints: BoxConstraints?,//Specifies constraints like minimum or maximum width/height.
+            margin: EdgeInsetsGeometry?,
+            transform: Matrix4?,//Applies a transformation to the container, such as scaling or rotation.
+            transformAlignment: AlignmentGeometry?,//Sets the alignment for the transformation's origin.
+            child: Widget?,
+            clipBehavior: Clip,//Specifies how to clip the content of the container if it overflows.
+        ),// A rectangular container for adding padding, margins, borders, and backgrounds
+        Row( 
+            children: List<Widget>,
+            mainAxisAlignment: MainAxisAlignment,//Determines how the children are aligned along the horizontal (main) axis.
+            crossAxisAlignment: CrossAxisAlignment,//Determines how the children are aligned along the vertical (cross) axis.
+            mainAxisSize: MainAxisSize,//Determines how much space the Row should occupy along the horizontal axis.
+            textDirection: TextDirection?,Sets the direction in which the children are laid out
+            verticalDirection: VerticalDirection,//Determines the order in which the children are laid out vertically when CrossAxisAlignment is set to start or end
+            textBaseline: TextBaseline?,Used with CrossAxisAlignment.baseline to align children along their text baselines.
+
+        ),// Horizontal layout
+        Column( 
+            children: List<Widget>,
+            mainAxisAlignment: MainAxisAlignment,//Determines how the children are aligned along the horizontal (main) axis.
+            crossAxisAlignment: CrossAxisAlignment,//Determines how the children are aligned along the vertical (cross) axis.
+            mainAxisSize: MainAxisSize,//Determines how much space the Row should occupy along the horizontal axis.
+            textDirection: TextDirection?,Sets the direction in which the children are laid out
+            verticalDirection: VerticalDirection,//Determines the order in which the children are laid out vertically when CrossAxisAlignment is set to start or end
+            textBaseline: TextBaseline?,Used with CrossAxisAlignment.baseline to align children along their text baselines.
+        ),// Vertical layout
+        Scaffold(
+            appBar: PreferredSizeWidget?,
+            body: Widget?,
+            floatingActionButton: Widget?,
+            floatingActionButtonLocation: FloatingActionButtonLocation?,//Determines the position of the floatingActionButton.
+            floatingActionButtonAnimator: FloatingActionButtonAnimator?,Controls the animation of the floatingActionButton when it is added, removed, or moved.
+            persistentFooterButtons: List<Widget>?,//A set of buttons displayed at the bottom of the scaffold, above the bottom navigation or safe area.
+            drawer: Widget?,//A navigation drawer displayed at the start of the screen.
+            endDrawer: Widget?,//A navigation drawer displayed at the end of the screen.
+            bottomNavigationBar: Widget?,//A widget displayed at the bottom of the scaffold, typically a BottomNavigationBar.
+            bottomSheet: Widget?,//A widget displayed at the bottom of the scaffold that can be persistent or temporary.
+            backgroundColor: Color?,The background color of the scaffold.
+            resizeToAvoidBottomInset: bool?,//Controls whether the body resizes when the keyboard appears.
+            primary: bool,//Whether the scaffold is the primary focus (e.g., affects the status bar).
+            extendBody: bool,//Whether the body extends behind the app bar.
+            extendBodyBehindAppBar: bool,//Whether the body extends behind the app bar.
+            onDrawerChanged: ValueChanged<bool>?,
+            onEndDrawerChanged: ValueChanged<bool>?,
+            key: Key?
         ),
-        Column( // Vertical layout
-            children: [
-                Text('First'),
-                Text('Second'),
-            ],
-        ),
-        Scaffold,
         Center,
         Container,
         TextButton,
-        ProgressIndicator:{
-            LinearProgressIndicator,
-            CircularProgressIndicator,
-        },
         FloatingActionButton,
         Image,
         Icon,
@@ -74,6 +128,14 @@
         AlertDialog,
         ],
     },
+    @Utils
+    {
+        ProgressIndicator:{
+            LinearProgressIndicator,
+            CircularProgressIndicator,
+        },
+
+    }
     @StateManagement
     {
         @StatefulWidget
@@ -94,21 +156,17 @@
         },
         @Provider
         {
-            `
             ChangeNotifierProvider(
                 create: (context) => YourNotifier(),
                 child: YourApp(),
             );
-            `
         },
         @BlocPattern
         {
-            `
             BlocProvider(
                 create: (context) => YourBloc(),
                 child: YourApp(),
             );
-            `
         },
     },
     @Navigation

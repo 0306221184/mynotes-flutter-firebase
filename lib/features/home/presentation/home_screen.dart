@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
@@ -25,12 +26,12 @@ class __HomeScreenState extends State<HomeScreen> {
     if (_authRepository.user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
-            context, "/login", (route) => route.isCurrent);
+            context, loginRoute, (route) => route.isCurrent);
       });
     }
     if (_authRepository.user?.emailVerified == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/verify-email");
+        Navigator.pushNamed(context, emailVerifyRoute);
       });
     }
   }
@@ -63,7 +64,7 @@ class __HomeScreenState extends State<HomeScreen> {
     });
     try {
       if (_authRepository.user?.emailVerified == false) {
-        Navigator.pushNamed(context, "/verify-email");
+        Navigator.pushNamed(context, emailVerifyRoute);
       } else
         print("Email is already verified!!");
     } catch (e) {
@@ -104,7 +105,7 @@ class __HomeScreenState extends State<HomeScreen> {
     if (logout) {
       print("logout!!!");
       Navigator.pushNamedAndRemoveUntil(
-          context, "/login", (route) => route.isCurrent);
+          context, loginRoute, (route) => route.isCurrent);
     }
   }
 
@@ -131,9 +132,9 @@ class __HomeScreenState extends State<HomeScreen> {
     });
     try {
       if (_authRepository.user?.emailVerified == false) {
-        Navigator.pushNamed(context, "/verify-email");
+        Navigator.pushNamed(context, emailVerifyRoute);
       } else {
-        Navigator.pushNamed(context, "/notes");
+        Navigator.pushNamed(context, notesRoute);
       }
     } catch (e) {
       print('Failed to send verification email: $e');
