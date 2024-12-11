@@ -15,7 +15,6 @@ class __LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final AuthRepository _authRepository;
-  late final Future<void> _data;
   bool isLoading = false; // Track loading state
 
   @override
@@ -29,7 +28,6 @@ class __LoginScreenState extends State<LoginScreen> {
             context, "/", (route) => route.isCurrent);
       });
     }
-    _data = _handleLogin();
     super.initState();
   }
 
@@ -76,10 +74,10 @@ class __LoginScreenState extends State<LoginScreen> {
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
         ),
         body: FutureBuilder(
-          future: _data,
+          future: null,
           //Firebase.initializeApp(options: DefaultFirebaseOptions.android),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.connectionState == ConnectionState.none) {
               return Column(
                 children: [
                   TextField(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
@@ -24,9 +25,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
     });
     try {
       final String verify = await _authRepository.verifyEmail();
-      print(verify);
+      await showErrorDialog(context, verify);
     } catch (e) {
-      print('Failed to send verification email: $e');
+      await showErrorDialog(context, 'Failed to send verification email: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading

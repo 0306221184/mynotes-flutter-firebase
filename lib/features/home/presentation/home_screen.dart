@@ -5,6 +5,7 @@ import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 import 'package:my_notes/features/home/data/enum/menu_action.dart';
 import 'package:my_notes/features/home/presentation/widgets/dialogs/show_logout_dialog.dart';
 
@@ -48,9 +49,9 @@ class __HomeScreenState extends State<HomeScreen> {
     final String email = _authRepository.user?.email ?? "";
     try {
       await _authRepository.resetPassword(email);
-      print('Password reset email sent to $email');
+      showErrorDialog(context, 'Password reset email sent to $email');
     } catch (e) {
-      print("Error: " + e.toString());
+      showErrorDialog(context, "Error: " + e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -65,10 +66,11 @@ class __HomeScreenState extends State<HomeScreen> {
     try {
       if (_authRepository.user?.emailVerified == false) {
         Navigator.pushNamed(context, emailVerifyRoute);
-      } else
-        print("Email is already verified!!");
+      } else {
+        showErrorDialog(context, "Email is already verified!!");
+      }
     } catch (e) {
-      print('Failed to send verification email: $e');
+      showErrorDialog(context, 'Failed to send verification email: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -83,16 +85,16 @@ class __HomeScreenState extends State<HomeScreen> {
     try {
       final User? user = await FirebaseAuth.instance.currentUser;
       if (user != null) {
-        print('user: ' + user.uid);
         if (user.emailVerified) {
-          print("email verified");
-        } else
-          print("email not verified");
+          showErrorDialog(context, "user:  ${user.uid} email verified");
+        } else {
+          showErrorDialog(context, "user:  ${user.uid} email not verified");
+        }
       } else {
-        print("already logged out!!");
+        showErrorDialog(context, "already logged out!!");
       }
     } catch (e) {
-      print('Failed to display: $e');
+      showErrorDialog(context, 'Failed to display: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -103,7 +105,6 @@ class __HomeScreenState extends State<HomeScreen> {
   Future<void> _handleLogout() async {
     bool logout = await AuthRepository().logout();
     if (logout) {
-      print("logout!!!");
       Navigator.pushNamedAndRemoveUntil(
           context, loginRoute, (route) => route.isCurrent);
     }
@@ -115,10 +116,10 @@ class __HomeScreenState extends State<HomeScreen> {
     });
     try {
       final String delete = await _authRepository.delete();
-      print(delete);
+      showErrorDialog(context, delete);
       _handleLogout();
     } catch (e) {
-      print('Failed to delete: $e');
+      showErrorDialog(context, 'Failed to delete: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -137,7 +138,7 @@ class __HomeScreenState extends State<HomeScreen> {
         Navigator.pushNamed(context, notesRoute);
       }
     } catch (e) {
-      print('Failed to send verification email: $e');
+      showErrorDialog(context, 'Failed to send verification email: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -188,10 +189,9 @@ class __HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: FutureBuilder(
-            future:
-                Firebase.initializeApp(options: DefaultFirebaseOptions.android),
+            future: null,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.connectionState == ConnectionState.none) {
                 return Column(
                   children: [
                     const Text("Home Page"),

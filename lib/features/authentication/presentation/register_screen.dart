@@ -15,7 +15,6 @@ class __RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final AuthRepository _authRepository;
-  late final Future<void> _data;
   bool isLoading = false; // Track loading state
 
   @override
@@ -30,7 +29,6 @@ class __RegisterScreenState extends State<RegisterScreen> {
     }
     _email = TextEditingController();
     _password = TextEditingController();
-    _data = _handleRegister();
   }
 
   @override

@@ -16,7 +16,7 @@ class AuthRepository {
       return res.user;
     } on FirebaseAuthException catch (e) {
       final String error = e.code.replaceAll(r'-', ' ');
-      showErrorDialog(context, error);
+      await showErrorDialog(context, error);
       return null;
     }
   }
@@ -29,7 +29,7 @@ class AuthRepository {
       return res.user;
     } on FirebaseAuthException catch (e) {
       final String error = e.code.replaceAll(r'-', ' ');
-      showErrorDialog(context, error);
+      await showErrorDialog(context, error);
       return null;
     }
   }
