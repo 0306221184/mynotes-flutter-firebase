@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
 import 'package:my_notes/core/shared/config/constants/routes.dart';
-import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
+import 'package:my_notes/core/shared/widgets/show_message_dialog.dart';
 import 'package:my_notes/features/home/data/enum/menu_action.dart';
 import 'package:my_notes/features/home/presentation/widgets/dialogs/show_logout_dialog.dart';
 
@@ -15,20 +16,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class __HomeScreenState extends State<HomeScreen> {
-  late final AuthRepository _authRepository;
   bool isLoading = false; // Track loading state
 
   @override
   void initState() {
     super.initState();
-    _authRepository = AuthRepository();
-    if (_authRepository.user == null) {
+    if (AuthService.firebase().currentUser == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
             context, loginRoute, (route) => route.isCurrent);
       });
     }
-    if (_authRepository.user?.emailVerified == false) {
+    if (AuthService.firebase().currentUser?.emailVerified == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, emailVerifyRoute);
       });
@@ -44,10 +43,11 @@ class __HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true; // Start loading
     });
-    final String email = _authRepository.user?.email ?? "";
+    final String email = AuthService.firebase().currentUser?.email ?? "";
     try {
-      await _authRepository.resetPassword(email);
-      showErrorDialog(context, 'Password reset email sent to $email');
+      await AuthService.firebase().sendResetPassword(email);
+      showMessageDialog(
+          context: context, message: 'Password reset email sent to $email');
     } catch (e) {
       showErrorDialog(context, "Error: " + e.toString());
     } finally {
@@ -62,10 +62,11 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      if (_authRepository.user?.emailVerified == false) {
+      if (AuthService.firebase().currentUser?.emailVerified == false) {
         Navigator.pushNamed(context, emailVerifyRoute);
       } else {
-        showErrorDialog(context, "Email is already verified!!");
+        showMessageDialog(
+            context: context, message: "Email is already verified!!");
       }
     } catch (e) {
       showErrorDialog(context, 'Failed to send verification email: $e');
@@ -84,12 +85,15 @@ class __HomeScreenState extends State<HomeScreen> {
       final User? user = await FirebaseAuth.instance.currentUser;
       if (user != null) {
         if (user.emailVerified) {
-          showErrorDialog(context, "user:  ${user.uid} email verified");
+          showMessageDialog(
+              context: context, message: "user:  ${user.uid} email verified");
         } else {
-          showErrorDialog(context, "user:  ${user.uid} email not verified");
+          showMessageDialog(
+              context: context,
+              message: "user:  ${user.uid} email not verified");
         }
       } else {
-        showErrorDialog(context, "already logged out!!");
+        showMessageDialog(context: context, message: "already logged out!!");
       }
     } catch (e) {
       showErrorDialog(context, 'Failed to display: $e');
@@ -101,10 +105,11 @@ class __HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _handleLogout() async {
-    bool logout = await AuthRepository().logout();
-    if (logout) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, loginRoute, (route) => route.isCurrent);
+    try {
+      await AuthService.firebase().logout();
+      Navigator.pushNamedAndRemoveUntil(context, loginRoute, (route) => false);
+    } catch (e) {
+      showErrorDialog(context, e.toString());
     }
   }
 
@@ -113,11 +118,11 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      final String delete = await _authRepository.delete();
-      showErrorDialog(context, delete);
+      await AuthService.firebase().deleteUser();
+      showMessageDialog(context: context, message: "User deleted successfully");
       _handleLogout();
     } catch (e) {
-      showErrorDialog(context, 'Failed to delete: $e');
+      showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -130,13 +135,13 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      if (_authRepository.user?.emailVerified == false) {
+      if (AuthService.firebase().currentUser?.emailVerified == false) {
         Navigator.pushNamed(context, emailVerifyRoute);
       } else {
         Navigator.pushNamed(context, notesRoute);
       }
     } catch (e) {
-      showErrorDialog(context, 'Failed to send verification email: $e');
+      showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -146,7 +151,7 @@ class __HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String email = _authRepository.user?.email ?? "";
+    String email = AuthService.firebase().currentUser?.email ?? "";
     return Scaffold(
         appBar: AppBar(
           title: Center(
@@ -187,9 +192,9 @@ class __HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: FutureBuilder(
-            future: null,
+            future: AuthService.firebase().initialize(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.none) {
+              if (snapshot.connectionState == ConnectionState.done) {
                 return Column(
                   children: [
                     const Text("Home Page"),

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, User, FirebaseAuthException;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:my_notes/core/abstracts/auth_service.dart';
+import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/core/utils/auth_exceptions.dart';
 
 class FirebaseAuthService implements IAuthService {
@@ -82,6 +84,26 @@ class FirebaseAuthService implements IAuthService {
       await user.sendEmailVerification();
     } else {
       throw UserNotLoginAuthException();
+    }
+  }
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+  }
+
+  @override
+  Future<void> sendResetPassword(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<void> deleteUser() async {
+    final user = currentUser;
+    if (user == null) {
+      throw UserNotLoginAuthException();
+    } else {
+      await user.delete();
     }
   }
 }

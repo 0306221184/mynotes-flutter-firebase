@@ -1,16 +1,15 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
 import 'package:my_notes/features/authentication/presentation/login_screen.dart';
 import 'package:my_notes/features/authentication/presentation/register_screen.dart';
 import 'package:my_notes/features/home/presentation/home_screen.dart';
-import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/features/notes/presentation/note_screen.dart';
 import 'package:my_notes/features/verify_email/presentation/verify_email_screen.dart';
 import 'package:my_notes/core/shared/config/constants/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+  await AuthService.firebase().initialize();
   runApp(MyApp());
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_notes/core/shared/repositories/auth_repository.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 
@@ -12,11 +12,9 @@ class VerifyEmail extends StatefulWidget {
 
 class _VerifyEmailState extends State<VerifyEmail> {
   bool isLoading = false;
-  late final AuthRepository _authRepository;
   @override
   void initState() {
     super.initState();
-    _authRepository = AuthRepository();
   }
 
   Future<void> _handleVerifyEmail() async {
@@ -24,10 +22,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
       isLoading = true; // Start loading
     });
     try {
-      final String verify = await _authRepository.verifyEmail();
-      await showErrorDialog(context, verify);
+      await AuthService.firebase().sendEmailVerification();
     } catch (e) {
-      await showErrorDialog(context, 'Failed to send verification email: $e');
+      await showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
