@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_notes/core/shared/config/constants/routes.dart';
-import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
 import 'package:my_notes/core/shared/repositories/auth_repository.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
