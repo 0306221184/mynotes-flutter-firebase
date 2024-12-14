@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_notes/core/shared/config/firebase/firebase_options.dart';
-import 'package:my_notes/core/shared/repositories/auth_repository.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
+import 'package:my_notes/core/shared/widgets/show_message_dialog.dart';
 import 'package:my_notes/features/home/data/enum/menu_action.dart';
 import 'package:my_notes/features/home/presentation/widgets/dialogs/show_logout_dialog.dart';
 
@@ -15,22 +16,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class __HomeScreenState extends State<HomeScreen> {
-  late final AuthRepository _authRepository;
   bool isLoading = false; // Track loading state
 
   @override
   void initState() {
     super.initState();
-    _authRepository = AuthRepository();
-    if (_authRepository.user == null) {
+    if (AuthService.firebase().currentUser == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
-            context, "/login", (route) => route.isCurrent);
+            context, loginRoute, (route) => route.isCurrent);
       });
     }
-    if (_authRepository.user?.emailVerified == false) {
+    if (AuthService.firebase().currentUser?.emailVerified == false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/verify-email");
+        Navigator.pushNamed(context, emailVerifyRoute);
       });
     }
   }
@@ -44,12 +43,13 @@ class __HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true; // Start loading
     });
-    final String email = _authRepository.user?.email ?? "";
     try {
-      await _authRepository.resetPassword(email);
-      print('Password reset email sent to $email');
+      showMessageDialog(
+          context: context,
+          message:
+              'Password reset email sent to ${AuthService.firebase().currentUser?.email}');
     } catch (e) {
-      print("Error: " + e.toString());
+      showErrorDialog(context, "Error: " + e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -62,12 +62,14 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      if (_authRepository.user?.emailVerified == false) {
-        Navigator.pushNamed(context, "/verify-email");
-      } else
-        print("Email is already verified!!");
+      if (AuthService.firebase().currentUser?.emailVerified == false) {
+        Navigator.pushNamed(context, emailVerifyRoute);
+      } else {
+        showMessageDialog(
+            context: context, message: "Email is already verified!!");
+      }
     } catch (e) {
-      print('Failed to send verification email: $e');
+      showErrorDialog(context, 'Failed to send verification email: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -82,16 +84,19 @@ class __HomeScreenState extends State<HomeScreen> {
     try {
       final User? user = await FirebaseAuth.instance.currentUser;
       if (user != null) {
-        print('user: ' + user.uid);
         if (user.emailVerified) {
-          print("email verified");
-        } else
-          print("email not verified");
+          showMessageDialog(
+              context: context, message: "user:  ${user.uid} email verified");
+        } else {
+          showMessageDialog(
+              context: context,
+              message: "user:  ${user.uid} email not verified");
+        }
       } else {
-        print("already logged out!!");
+        showMessageDialog(context: context, message: "already logged out!!");
       }
     } catch (e) {
-      print('Failed to display: $e');
+      showErrorDialog(context, 'Failed to display: $e');
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -100,11 +105,12 @@ class __HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _handleLogout() async {
-    bool logout = await AuthRepository().logout();
-    if (logout) {
-      print("logout!!!");
+    try {
+      await AuthService.firebase().logout();
       Navigator.pushNamedAndRemoveUntil(
-          context, "/login", (route) => route.isCurrent);
+          context, loginRoute, (route) => route.isCurrent);
+    } catch (e) {
+      showErrorDialog(context, e.toString());
     }
   }
 
@@ -113,11 +119,13 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      final String delete = await _authRepository.delete();
-      print(delete);
-      _handleLogout();
+      await AuthService.firebase().deleteUser();
+      await showMessageDialog(
+          context: context, message: "User deleted successfully");
+      Navigator.pushNamedAndRemoveUntil(
+          context, loginRoute, (route) => route.isCurrent);
     } catch (e) {
-      print('Failed to delete: $e');
+      showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -130,13 +138,13 @@ class __HomeScreenState extends State<HomeScreen> {
       isLoading = true; // Start loading
     });
     try {
-      if (_authRepository.user?.emailVerified == false) {
-        Navigator.pushNamed(context, "/verify-email");
+      if (AuthService.firebase().currentUser?.emailVerified == false) {
+        Navigator.pushNamed(context, emailVerifyRoute);
       } else {
-        Navigator.pushNamed(context, "/notes");
+        Navigator.pushNamed(context, notesRoute);
       }
     } catch (e) {
-      print('Failed to send verification email: $e');
+      showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -146,7 +154,7 @@ class __HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String email = _authRepository.user?.email ?? "";
+    String email = AuthService.firebase().currentUser?.email ?? "";
     return Scaffold(
         appBar: AppBar(
           title: Center(
@@ -187,8 +195,7 @@ class __HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: FutureBuilder(
-            future:
-                Firebase.initializeApp(options: DefaultFirebaseOptions.android),
+            future: AuthService.firebase().initialize(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Column(

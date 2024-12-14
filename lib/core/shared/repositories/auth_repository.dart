@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
@@ -6,26 +8,28 @@ class AuthRepository {
   AuthRepository({FirebaseAuth? firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
-  Future<User?> login(String email, String password) async {
+  Future<User?> login(
+      String email, String password, BuildContext context) async {
     try {
       UserCredential res = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       return res.user;
     } on FirebaseAuthException catch (e) {
       final String error = e.code.replaceAll(r'-', ' ');
-      print("Error: $error");
+      await showErrorDialog(context, error);
       return null;
     }
   }
 
-  Future<User?> register(String email, String password) async {
+  Future<User?> register(
+      String email, String password, BuildContext context) async {
     try {
       final UserCredential res = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       return res.user;
     } on FirebaseAuthException catch (e) {
       final String error = e.code.replaceAll(r'-', ' ');
-      print("Error: $error");
+      await showErrorDialog(context, error);
       return null;
     }
   }

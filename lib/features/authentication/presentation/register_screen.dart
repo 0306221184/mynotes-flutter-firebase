@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_notes/core/shared/repositories/auth_repository.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,15 +15,12 @@ class RegisterScreen extends StatefulWidget {
 class __RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  late final AuthRepository _authRepository;
-  late final Future<void> _data;
   bool isLoading = false; // Track loading state
 
   @override
   void initState() {
     super.initState();
-    _authRepository = AuthRepository();
-    if (_authRepository.user != null) {
+    if (AuthService.firebase().currentUser != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
             context, "/", (route) => route.isCurrent);
@@ -29,7 +28,6 @@ class __RegisterScreenState extends State<RegisterScreen> {
     }
     _email = TextEditingController();
     _password = TextEditingController();
-    _data = _handleRegister();
   }
 
   @override
@@ -46,14 +44,14 @@ class __RegisterScreenState extends State<RegisterScreen> {
     final email = _email.text;
     final password = _password.text;
     try {
-      final User? res = await _authRepository.register(email, password);
-      print(res);
+      final User? res = await AuthService.firebase()
+          .createUser(email: email, password: password);
       if (res != null) {
         Navigator.pushNamedAndRemoveUntil(
             context, "/", (route) => route.isCurrent);
       }
     } catch (e) {
-      print("Error: " + e.toString());
+      showErrorDialog(context, "Error: " + e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -63,7 +61,7 @@ class __RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _handleLogin() async {
     Navigator.pushNamedAndRemoveUntil(
-        context, "/login", (route) => route.isCurrent);
+        context, loginRoute, (route) => route.isCurrent);
   }
 
   @override
@@ -75,8 +73,8 @@ class __RegisterScreenState extends State<RegisterScreen> {
           ),
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
         ),
-        body: FutureBuilder<List<dynamic>>(
-          future: Future.wait([_handleRegister(), _data]),
+        body: FutureBuilder(
+          future: AuthService.firebase().initialize(),
           //Firebase.initializeApp(options: DefaultFirebaseOptions.android),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {

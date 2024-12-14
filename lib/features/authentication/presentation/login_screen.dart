@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_notes/core/shared/repositories/auth_repository.dart';
+import 'package:my_notes/core/services/auth/auth_service.dart';
+import 'package:my_notes/core/shared/config/constants/routes.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
+import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,22 +14,18 @@ class LoginScreen extends StatefulWidget {
 class __LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  late final AuthRepository _authRepository;
-  late final Future<void> _data;
   bool isLoading = false; // Track loading state
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
-    _authRepository = AuthRepository();
-    if (_authRepository.user != null) {
+    if (AuthService.firebase().currentUser != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
             context, "/", (route) => route.isCurrent);
       });
     }
-    _data = _handleLogin();
     super.initState();
   }
 
@@ -41,7 +38,7 @@ class __LoginScreenState extends State<LoginScreen> {
 
   void _handleRegister() {
     Navigator.pushNamedAndRemoveUntil(
-        context, "/register", (route) => route.isCurrent);
+        context, registerRoute, (route) => route.isCurrent);
   }
 
   Future<void> _handleLogin() async {
@@ -49,14 +46,12 @@ class __LoginScreenState extends State<LoginScreen> {
       isLoading = true; // Start loading
     });
     try {
-      User? res = await _authRepository.login(_email.text, _password.text);
-      print(res);
-      if (res != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, "/", (route) => route.isCurrent);
-      }
+      await AuthService.firebase()
+          .login(email: _email.text, password: _password.text);
+      Navigator.pushNamedAndRemoveUntil(
+          context, "/", (route) => route.isCurrent);
     } catch (e) {
-      print("Error: " + e.toString());
+      showErrorDialog(context, "Error: " + e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
@@ -74,7 +69,7 @@ class __LoginScreenState extends State<LoginScreen> {
           backgroundColor: const Color.fromARGB(255, 0, 140, 255),
         ),
         body: FutureBuilder(
-          future: _data,
+          future: AuthService.firebase().initialize(),
           //Firebase.initializeApp(options: DefaultFirebaseOptions.android),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
