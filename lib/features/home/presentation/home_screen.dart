@@ -43,11 +43,11 @@ class __HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true; // Start loading
     });
-    final String email = AuthService.firebase().currentUser?.email ?? "";
     try {
-      await AuthService.firebase().sendResetPassword(email);
       showMessageDialog(
-          context: context, message: 'Password reset email sent to $email');
+          context: context,
+          message:
+              'Password reset email sent to ${AuthService.firebase().currentUser?.email}');
     } catch (e) {
       showErrorDialog(context, "Error: " + e.toString());
     } finally {
@@ -107,7 +107,8 @@ class __HomeScreenState extends State<HomeScreen> {
   Future<void> _handleLogout() async {
     try {
       await AuthService.firebase().logout();
-      Navigator.pushNamedAndRemoveUntil(context, loginRoute, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, loginRoute, (route) => route.isCurrent);
     } catch (e) {
       showErrorDialog(context, e.toString());
     }
@@ -119,8 +120,10 @@ class __HomeScreenState extends State<HomeScreen> {
     });
     try {
       await AuthService.firebase().deleteUser();
-      showMessageDialog(context: context, message: "User deleted successfully");
-      _handleLogout();
+      await showMessageDialog(
+          context: context, message: "User deleted successfully");
+      Navigator.pushNamedAndRemoveUntil(
+          context, loginRoute, (route) => route.isCurrent);
     } catch (e) {
       showErrorDialog(context, e.toString());
     } finally {

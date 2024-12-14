@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_notes/core/patterns/factory/auth_factory.dart';
 import 'package:my_notes/core/services/auth/auth_service.dart';
 import 'package:my_notes/core/shared/widgets/TextButton.dart';
 import 'package:my_notes/core/shared/widgets/show_error_dialog.dart';
+import 'package:my_notes/core/shared/widgets/show_message_dialog.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
@@ -22,9 +24,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
       isLoading = true; // Start loading
     });
     try {
-      await AuthService.firebase().sendEmailVerification();
+      await AuthFactory.firebase().sendEmailVerification();
+      showMessageDialog(
+          context: context,
+          message:
+              "Email verification was send to  ${AuthFactory.firebase().currentUser?.email}");
     } catch (e) {
-      await showErrorDialog(context, e.toString());
+      showErrorDialog(context, e.toString());
     } finally {
       setState(() {
         isLoading = false; // Stop loading
